@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: jitterbit_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jitterbit_orders
+    ports:
+      - "5432:5432"
