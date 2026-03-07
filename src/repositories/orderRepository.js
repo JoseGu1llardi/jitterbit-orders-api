@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const createOrder = async (orderData) => {
+const create = async (orderData) => {
   return await prisma.order.create({
     data: {
       orderId: orderData.orderId,
@@ -48,4 +48,22 @@ const update = async (id, orderData) => {
     },
     include: { items: true },
   });
+};
+
+const deleteOrder = async (id) => {
+  // Items must be deleted first due to foreign key constraints
+  await prisma.item.deleteMany({
+    where: { orderId: id },
+  });
+  return await prisma.order.delete({
+    where: { orderId: id },
+  });
+};
+
+module.exports = {
+  create,
+  findById,
+  findAll,
+  update,
+  delete: deleteOrder,
 };
