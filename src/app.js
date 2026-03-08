@@ -5,6 +5,8 @@ const swaggerSpec = require("./config/swagger");
 require("dotenv").config();
 
 const orderRoutes = require("./routes/orderRoutes");
+const authRoutes = require("./routes/authRoutes");
+const { authenticateToken } = require("./middlewares/authMiddleware");
 
 const app = express();
 
@@ -14,8 +16,11 @@ app.use(express.json());
 // Swagger documentation available at /api-docs
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
-// Routes
-app.use("/order", orderRoutes);
+// Public routes
+app.use("/auth", authRoutes);
+
+// Protected routes — all /order endpoints require a valid JWT token
+app.use("/order", authenticateToken, orderRoutes);
 
 // Global error middleware
 app.use((err, req, res, next) => {
