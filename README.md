@@ -16,7 +16,9 @@ The project follows a layered architecture:
 ```
 src/
 ├── controllers/   → receives HTTP requests, returns responses
-├── services/      → business logic and data mapping
+├── mappers/       → data transformation between request and database schemas
+├── middlewares/   → JWT authentication middleware
+├── services/      → business logic
 ├── repositories/  → database access via Prisma
 └── routes/        → endpoint definitions
 ```
