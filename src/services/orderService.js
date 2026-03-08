@@ -1,31 +1,8 @@
 const orderRepository = require("../repositories/orderRepository");
+const { mapRequestToDatabase } = require("../mappers/orderMapper");
 
-/**
- * Maps to incoming request body (Portuguese fields) to the database schema (English fields).
- *
- * Input:  { numeroPedido, valorTotal, dataCriacao, items: [{ idItem, quantidadeItem, valorItem }] }
- * Output: { orderId, value, creationDate, items: [{ productId, quantity, price }] }
- */
-const mapRequestToDatabase = (body) => {
-  const mapped = {
-    orderId: body.numeroPedido,
-    value: body.valorTotal,
-    creationDate: new Date(body.dataCriacao),
-  };
-
-  // Only map items if they are present or non-empty
-  if (body.items && body.items.length > 0) {
-    mapped.items = body.items.map((item) => ({
-      productId: parseInt(item.idItem),
-      quantity: parseInt(item.quantidadeItem),
-      price: parseFloat(item.valorItem),
-    }));
-  }
-  return mapped;
-};
-
-const createOrder = async (body) => {
-  const mappedOrder = mapRequestToDatabase(body);
+const createOrder = async (payload) => {
+  const mappedOrder = mapRequestToDatabase(payload);
   return await orderRepository.create(mappedOrder);
 };
 
@@ -37,8 +14,8 @@ const getAllOrders = async () => {
   return await orderRepository.findAll();
 };
 
-const updateOrder = async (id, body) => {
-  const mappedOrder = mapRequestToDatabase(body);
+const updateOrder = async (id, payload) => {
+  const mappedOrder = mapRequestToDatabase(payload);
   return await orderRepository.update(id, mappedOrder);
 };
 
