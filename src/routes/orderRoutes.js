@@ -102,6 +102,10 @@ router.get("/list", orderController.getAllOrders);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/OrderOutput'
+ *       400:
+ *         description: Missing required fields
+ *       409:
+ *         description: Order with this ID already exists
  */
 router.post("/", orderController.createOrder);
 
@@ -173,7 +177,7 @@ router.put("/:id", orderController.updateOrder);
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Order deleted successfully
  *       404:
  *         description: Order not found

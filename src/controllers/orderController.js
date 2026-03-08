@@ -2,9 +2,20 @@ const orderService = require("../services/orderService");
 
 const createOrder = async (req, res, next) => {
   try {
+    const { numeroPedido, valorTotal, dataCriacao, items } = req.body;
+
+    if (!numeroPedido || valorTotal === undefined || !dataCriacao || !items?.length) {
+      return res.status(400).json({
+        error: "numeroPedido, valorTotal, dataCriacao and items are required",
+      });
+    }
+
     const order = await orderService.createOrder(req.body);
     res.status(201).json(order);
   } catch (error) {
+    if (error.status === 409) {
+      return res.status(409).json({ error: error.message });
+    }
     next(error);
   }
 };
@@ -48,7 +59,7 @@ const deleteOrder = async (req, res, next) => {
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
-    res.status(200).json({ message: "Order deleted successfully" });
+    res.status(204).send();
   } catch (error) {
     next(error);
   }
