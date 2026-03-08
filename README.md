@@ -110,14 +110,25 @@ curl http://localhost:3000/order/list \
 
 ## Endpoints
 
-| Method | URL         | Description        |
-| ------ | ----------- | ------------------ |
-| POST   | /auth/login | Authenticate user  |
-| POST   | /order      | Create a new order |
-| GET    | /order/:id  | Get order by ID    |
-| GET    | /order/list | List all orders    |
-| PUT    | /order/:id  | Update an order    |
-| DELETE | /order/:id  | Delete an order    |
+| Method | URL         | Description        | Success Status |
+| ------ | ----------- | ------------------ | -------------- |
+| POST   | /auth/login | Authenticate user  | 200            |
+| POST   | /order      | Create a new order | 201            |
+| GET    | /order/:id  | Get order by ID    | 200            |
+| GET    | /order/list | List all orders    | 200            |
+| PUT    | /order/:id  | Update an order    | 200            |
+| DELETE | /order/:id  | Delete an order    | 204            |
+
+## Error Responses
+
+| Status | Description                                      |
+| ------ | ------------------------------------------------ |
+| 400    | Missing required fields in the request body     |
+| 401    | No token provided                                |
+| 403    | Invalid or expired token                         |
+| 404    | Order not found                                  |
+| 409    | An order with this ID already exists             |
+| 500    | Internal server error                            |
 
 ## Example Request
 
@@ -147,6 +158,12 @@ curl -X POST http://localhost:3000/order \
       }
     ]
   }'
+```
+
+## Running Tests
+
+```bash
+npm test
 ```
 
 ## API Documentation
