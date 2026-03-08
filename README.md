@@ -78,10 +78,39 @@ npx prisma migrate dev
 npm run dev
 ```
 
+## Authentication
+
+All `/order` endpoints require a valid JWT token.
+
+**1. Get a token:**
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "password123"}'
+```
+
+**2. Use the token in requests:**
+
+```bash
+curl http://localhost:3000/order/list \
+  -H "Authorization: Bearer <your_token_here>"
+```
+
+| Endpoint    | Method | Auth Required |
+| ----------- | ------ | ------------- |
+| /auth/login | POST   | No            |
+| /order      | POST   | Yes           |
+| /order/:id  | GET    | Yes           |
+| /order/list | GET    | Yes           |
+| /order/:id  | PUT    | Yes           |
+| /order/:id  | DELETE | Yes           |
+
 ## Endpoints
 
 | Method | URL         | Description        |
 | ------ | ----------- | ------------------ |
+| POST   | /auth/login | Authenticate user  |
 | POST   | /order      | Create a new order |
 | GET    | /order/:id  | Get order by ID    |
 | GET    | /order/list | List all orders    |
@@ -90,9 +119,20 @@ npm run dev
 
 ## Example Request
 
+**1. Login to get a token:**
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "password123"}'
+```
+
+**2. Create an order using the token:**
+
 ```bash
 curl -X POST http://localhost:3000/order \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your_token_here>" \
   -d '{
     "numeroPedido": "v10089015vdb-01",
     "valorTotal": 10000,
@@ -106,3 +146,7 @@ curl -X POST http://localhost:3000/order \
     ]
   }'
 ```
+
+## API Documentation
+
+Swagger UI available at: http://localhost:3000/api-docs
